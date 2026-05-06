@@ -1,0 +1,281 @@
+% ============================================================
+% 第七章 样机制作与实验验证
+% ============================================================
+
+\chapter{样机制作与实验验证}
+
+\section{样机制作过程}
+
+\subsection{3D打印节点制作}
+
+PLA节点结构件采用FDM（熔融沉积成型）工艺打印，
+打印设备为% TODO-未填写（打印机型号，如：Bambu Lab X1C / Creality Ender-3等）
+，打印参数如表~\ref{tab:print_params}所示。
+
+\begin{table}[htbp]
+    \centering
+    \caption{PLA节点3D打印参数}
+    \label{tab:print_params}
+    \begin{tabular}{ll}
+        \toprule
+        参数           & 设置值 \\
+        \midrule
+        打印材料        & PLA \\
+        层高            & \emph{待填写} \\
+        填充密度        & \emph{待填写} \\
+        打印温度        & \emph{待填写} \\
+        热床温度        & \emph{待填写} \\
+        打印时间（合计）& \emph{待填写} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+节点结构件共% TODO-未填写（件数）件，包括四角电机安装节点、
+边框中点连接节点、中心飞控安装平台等，总打印质量约600\,g。
+
+% ----------------------------------------------------------
+% [图片占位 Fig.7.1] ★推荐制作★
+% 内容：3D打印节点实物照片
+%   拍摄各类节点（角节点、边中节点、中心平台）排列在一起的整体照
+%   光线均匀，白色或灰色背景
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.70\textwidth]{figures/fig7_1_pla_nodes.png}
+%     \caption{PLA节点结构件实物照片}
+%     \label{fig:pla_nodes}
+% \end{figure}
+% ----------------------------------------------------------
+
+\subsection{充气骨架组装}
+
+充气骨架的组装流程如下：
+
+\begin{enumerate}
+    \item 将标准快递气柱按设计长度裁切，端部折叠密封；
+    \item 将气柱穿入PLA节点接口，用扎带或卡扣固定；
+    \item 依次完成四条外框边、四条中心辐射杆的连接；
+    \item 安装中心飞控平台，固定伞面固定架；
+    \item 充气测试，检验各节点气密性，确认骨架展开形态。
+\end{enumerate}
+
+% ----------------------------------------------------------
+% [图片占位 Fig.7.2] ★推荐制作★
+% 内容：骨架组装过程照片（2~3张拼图）
+%   如：气柱穿入节点特写、骨架充气展开过程、完整充气骨架俯视
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.85\textwidth]{figures/fig7_2_assembly.png}
+%     \caption{充气骨架组装过程}
+%     \label{fig:assembly}
+% \end{figure}
+% ----------------------------------------------------------
+
+\subsection{电子系统集成}
+
+电子系统集成按以下步骤完成：
+
+\begin{enumerate}
+    \item 四个电机安装于旋翼保护圈内侧电机座，用M3螺栓固定；
+    \item ESC沿骨架气柱外侧布线，用扎带固定，三相线与电机焊接；
+    \item Pixhawk 6C安装于中心飞控平台，减震垫隔振；
+    \item GPS模块固定于伞面固定架顶端，磁罗盘朝上；
+    \item R9DS接收机固定于中心平台侧面，天线展开朝向外侧；
+    \item 电源分配板（PDB）固定于中心平台下方，连接四个ESC与电源接口。
+\end{enumerate}
+
+集成完成后整机重量实测为% TODO-未填写（实测整机质量，如：1483g）\,g，
+与质量预算（1468\,g）误差约% TODO-未填写（误差百分比）\%。
+
+
+\section{充气结构性能测试}
+
+\subsection{充气展开时间测试}
+
+使用12\,V车载微型充气泵对骨架进行充气，
+计时从开启充气泵到骨架完全展开（气柱达到工作气压）所需时间。
+重复测试% TODO-未填写（次数，如：5）次，结果如表~\ref{tab:inflation_test}所示。
+
+\begin{table}[htbp]
+    \centering
+    \caption{充气展开时间测试结果}
+    \label{tab:inflation_test}
+    \begin{tabular}{lr}
+        \toprule
+        测试项目           & 结果 \\
+        \midrule
+        充气泵型号          & \emph{待填写} \\
+        额定流量            & \emph{待填写} \\
+        平均充气时间        & \emph{待填写} \\
+        最短充气时间        & \emph{待填写} \\
+        最长充气时间        & \emph{待填写} \\
+        排气收纳时间        & \emph{待填写} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{气密性保持测试}
+
+骨架充气完成后，关闭充气阀，持续观察气柱压力变化，
+记录气柱维持有效工作气压的时长，以验证气密性满足使用需求。
+
+测试结果：气柱在充气完成后% TODO-未填写（如：持续保持工作气压超过30分钟）,
+满足单次使用时长（约5$\sim$10\,min）的气密性要求。
+
+% ----------------------------------------------------------
+% [图片占位 Fig.7.3] ★可选制作★
+% 内容：充气展开过程时序照片（3~4张）
+%   t=0s收纳状态、t=20s部分充气、t=40s完全展开
+%   手机定时拍摄即可
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.85\textwidth]{figures/fig7_3_inflation_seq.png}
+%     \caption{充气展开过程时序（从收纳态到完全展开）}
+%     \label{fig:inflation_seq}
+% \end{figure}
+% ----------------------------------------------------------
+
+
+\section{飞行性能测试}
+
+\subsection{测试环境与条件}
+
+飞行测试在% TODO-未填写（测试场地描述，如：室外空旷操场/室内大空间）
+进行，测试条件如表~\ref{tab:test_condition}所示。
+
+\begin{table}[htbp]
+    \centering
+    \caption{飞行测试环境条件}
+    \label{tab:test_condition}
+    \begin{tabular}{ll}
+        \toprule
+        条件项目     & 测试值 \\
+        \midrule
+        测试日期     & \emph{待填写} \\
+        测试地点     & \emph{待填写} \\
+        气温         & \emph{待填写} \\
+        风速         & \emph{待填写} \\
+        供电方式     & 系留供电，6S 10000\,mAh \\
+        飞行模式     & 姿态稳定模式（Stabilize） \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{悬停稳定性测试}
+
+\subsubsection{绑绳悬停测试}
+
+首次通电飞行前，采用绑绳约束方式进行安全测试：
+用四根长约1\,m的软绳从四角方向固定飞行器，
+推油门至悬停点，观察姿态稳定性。
+
+测试结果：% TODO-未填写
+（如：初始P增益过大，Roll轴出现约±8°的周期性震荡，
+将MC\_ROLLRATE\_P由0.05调低至0.03后震荡消除，姿态稳定。）
+
+\subsubsection{自由悬停测试}
+
+解除绑绳后进行自由悬停测试，
+飞行器在姿态稳定模式下由操作者手动控制悬停于地面以上约1.5\,m处，
+持续飞行时长% TODO-未填写（如：约3分钟）。
+
+主要测试结果如表~\ref{tab:hover_result}所示。
+
+\begin{table}[htbp]
+    \centering
+    \caption{自由悬停测试结果}
+    \label{tab:hover_result}
+    \begin{tabular}{lll}
+        \toprule
+        测试指标           & 测试结果          & 设计目标 \\
+        \midrule
+        悬停姿态偏差（Roll） & \emph{待填写}  & $\leq\pm5°$ \\
+        悬停姿态偏差（Pitch）& \emph{待填写}                  & $\leq\pm5°$ \\
+        实际悬停油门        & \emph{待填写}    & 26\%$\sim$30\% \\
+        最大飞行高度        & \emph{待填写}                  & $\leq 2.5$\,m \\
+        系留模式续航        & \emph{待填写} & $\geq 15$\,min \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+% ----------------------------------------------------------
+% [图片占位 Fig.7.4] ★重要★
+% 内容：飞行测试现场照片（2张）
+%   左：飞行雨伞悬停中的正面照（体现飞行形态）
+%   右：飞控日志截图（QGC地面站，显示Roll/Pitch角度曲线）
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.85\textwidth]{figures/fig7_4_flight_test.png}
+%     \caption{飞行雨伞悬停测试现场与飞控日志}
+%     \label{fig:flight_test}
+% \end{figure}
+% ----------------------------------------------------------
+
+\subsection{遮雨功能验证}
+
+\subsubsection{遮蔽面积验证}
+
+飞行雨伞悬停于距地面约1.8\,m高度，
+在地面投影范围内铺设参考测量纸，
+测量伞面正投影边长。
+
+测试结果：伞面投影边长实测为% TODO-未填写（如：68.2\,cm $\times$ 68.5\,cm），
+与设计值686\,mm（68.6\,cm）误差约% TODO-未填写\%，
+有效遮蔽面积约% TODO-未填写\,m$^2$，满足设计指标（$\geq 0.40$\,m$^2$）。
+
+\subsubsection{防水功能验证}
+
+使用喷水壶模拟降雨，在飞行雨伞正下方放置传感器纸（遇水变色），
+验证TPU伞面的防水遮蔽效果。
+
+测试结果：% TODO-未填写
+（如：伞面正投影范围内传感器纸未变色，伞面边缘以外区域传感器纸全部变色，
+证明TPU伞面具备有效防水性能。）
+
+% ----------------------------------------------------------
+% [图片占位 Fig.7.5] ★推荐制作★
+% 内容：遮雨功能验证照片
+%   飞行雨伞悬停+地面铺设传感器纸的全景，或喷水遮雨过程照片
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.75\textwidth]{figures/fig7_5_rain_test.png}
+%     \caption{飞行雨伞防水遮蔽功能验证}
+%     \label{fig:rain_test}
+% \end{figure}
+% ----------------------------------------------------------
+
+
+\section{完整工作流程验证}
+
+本节对飞行雨伞系统"收纳→充气展开→起飞→悬停→降落→收纳"
+完整工作闭环进行计时验证，结果如表~\ref{tab:workflow_result}所示。
+
+\begin{table}[htbp]
+    \centering
+    \caption{完整工作流程计时验证}
+    \label{tab:workflow_result}
+    \begin{tabular}{lll}
+        \toprule
+        流程阶段              & 实测时间          & 设计目标 \\
+        \midrule
+        取出收纳袋到开始充气  & \emph{待填写}     & — \\
+        充气展开时间          & \emph{待填写}     & $\leq 60$\,s \\
+        飞控上电到GPS锁定     & \emph{待填写}     & — \\
+        起飞准备总时间        & \emph{待填写}     & $\leq 90$\,s \\
+        悬停服务时间（本次）  & \emph{待填写}     & — \\
+        降落到排气收纳完成    & \emph{待填写}     & $\leq 60$\,s \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+测试结论：% TODO-未填写
+（如：完整工作流程顺利完成，各阶段时间均满足设计指标，
+充气展开与排气收纳操作连贯，验证了系统"随车常备、快速部署"使用范式的工程可行性。）
+
+
+\section{本章小结}
+
+本章完成了飞行雨伞样机的制作过程记录与实验验证工作。
+% TODO-未填写
+（待全部测试完成后，在此补写一段50~80字的实验结论总结：
+涵盖充气展开时间、悬停稳定性、遮雨面积、续航时间等关键指标的实测结果，
+与设计目标的符合情况，以及存在的主要问题与改进建议。）

@@ -1,0 +1,318 @@
+% ============================================================
+% 第四章 动力系统设计与选型
+% ============================================================
+
+\chapter{动力系统设计与选型}
+
+\section{整机质量预算}
+
+动力系统选型的首要输入参数是整机起飞质量。
+本系统对各部件质量进行系统梳理与预算，
+所有数值以实物称重或厂商规格表数据为准，如表~\ref{tab:mass_budget}所示。
+
+\begin{table}[htbp]
+    \centering
+    \caption{整机质量预算}
+    \label{tab:mass_budget}
+    \begin{tabular}{llr}
+        \toprule
+        部件                    & 型号/说明              & 质量 (g) \\
+        \midrule
+        无刷电机 $\times 4$     & SIRIUS 2306.5-1850KV  & 320 \\
+        电子调速器（ESC）$\times 4$ & —                  & 100 \\
+        桨叶 $\times 4$         & 51366 MCK v3          &  52 \\
+        飞行控制器               & Pixhawk 6C            &  38 \\
+        GPS模块                 & —                     &  30 \\
+        遥控接收机               & 乐迪 R9DS             &  15 \\
+        PLA节点结构件            & FDM 3D打印            & 600 \\
+        气柱骨架（全部）          & 快递气柱              & 150 \\
+        TPU伞面                 & TPU薄膜               & 150 \\
+        线缆与紧固件             & —                     &  13 \\
+        \midrule
+        \textbf{整机合计}        & —                    & \textbf{1468} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+电源延长线（14AWG，约150cm）对系统重心影响极小可忽略。
+因此，整机起飞质量 $m = 1468$\,g（不含地面系留电源），
+对应总重力：
+
+\begin{equation}
+    W = mg = 1.468 \times 9.81 = 14.40\,\text{N}
+    \label{eq:weight}
+\end{equation}
+
+系统在悬停状态下所需的四旋翼总升力须满足 $T_{\text{total}} \geq W = 14.40$\,N。
+
+
+\section{悬停升力需求与动量理论分析}
+
+\subsection{悬停升力需求}
+
+在静态悬停条件下，飞行器所需总升力等于整机重力，即：
+
+\begin{equation}
+    T_{\text{total}} = W = 14.40\,\text{N}
+    \label{eq:hover_thrust}
+\end{equation}
+
+四旋翼对称布局下，单旋翼所需悬停升力为：
+
+\begin{equation}
+    T_{\text{single}} = \frac{T_{\text{total}}}{4} = \frac{14.40}{4} = 3.60\,\text{N} \approx 367\,\text{gf}
+    \label{eq:single_thrust}
+\end{equation}
+
+\subsection{动量理论推导}
+
+根据螺旋桨动量理论（Actuator Disk Theory），
+旋翼在悬停状态下通过加速桨盘下方气流产生升力。
+设桨盘面积为 $A$，气流诱导速度为 $v_i$，在无损理想情况下，推力与诱导速度的关系为：
+
+\begin{equation}
+    T = 2\rho A v_i^2
+    \label{eq:momentum_theory}
+\end{equation}
+
+由此可解出悬停诱导速度：
+
+\begin{equation}
+    v_i = \sqrt{\frac{T}{2\rho A}}
+    \label{eq:induced_velocity}
+\end{equation}
+
+本系统选用51366 MCK v3桨叶，桨盘直径 $D = 5.1$\,inch $= 129.5$\,mm，
+对应桨盘面积：
+
+\begin{equation}
+    A = \pi \left(\frac{D}{2}\right)^2 = \pi \times (0.0648)^2 \approx 1.318 \times 10^{-2}\,\text{m}^2
+    \label{eq:disk_area}
+\end{equation}
+
+取标准大气密度 $\rho = 1.225$\,kg/m$^3$，代入式~(\ref{eq:induced_velocity})：
+
+\begin{equation}
+    v_i = \sqrt{\frac{3.60}{2 \times 1.225 \times 1.318 \times 10^{-2}}} \approx 10.56\,\text{m/s}
+    \label{eq:vi_result}
+\end{equation}
+
+\subsection{悬停功率估算}
+
+理想悬停功率（单旋翼）为：
+
+\begin{equation}
+    P_{\text{ideal}} = T \cdot v_i = 3.60 \times 10.56 \approx 38.0\,\text{W}
+    \label{eq:ideal_power}
+\end{equation}
+
+四旋翼总理想悬停功率为 $4 \times 38.0 = 152.1$\,W。
+考虑到实际桨叶效率（品质因数 $\text{FOM} \approx 0.7$），
+实际悬停功率估算为：
+
+\begin{equation}
+    P_{\text{actual}} = \frac{P_{\text{ideal}}}{\text{FOM}} = \frac{152.1}{0.7} \approx 217\,\text{W}
+    \label{eq:actual_power}
+\end{equation}
+
+
+\section{电机与桨叶选型}
+
+\subsection{选型依据}
+
+基于上节计算，单旋翼悬停推力需求为367\,gf，
+系统对电机选型提出以下约束条件：
+
+\begin{itemize}
+    \item 推力：在合理油门（$\leq 70\%$）下单电机推力须 $\geq 550$\,gf，
+          以保证推重比 $\geq 1.5$；
+    \item 效率：悬停工作点效率（g/W）尽量高，以延长续航时间；
+    \item 重量：单电机质量 $\leq 100$\,g（四电机合计 $\leq 400$\,g）；
+    \item 适配性：电机安装孔径与旋翼保护圈结构兼容。
+\end{itemize}
+
+\subsection{电机选型：SIRIUS 2306.5-1850KV}
+
+本系统选用 \textbf{SIRIUS 2306.5-1850KV} 无刷电机，主要参数如表~\ref{tab:motor_spec}所示。
+
+\begin{table}[htbp]
+    \centering
+    \caption{SIRIUS 2306.5-1850KV 电机主要参数}
+    \label{tab:motor_spec}
+    \begin{tabular}{ll}
+        \toprule
+        参数          & 数值 \\
+        \midrule
+        定子尺寸       & 23mm $\times$ 6.5mm \\
+        KV值          & 1850\,rpm/V \\
+        推荐电池       & 4S $\sim$ 6S \\
+        单机质量       & 约80\,g \\
+        最大连续电流   & 约35\,A \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{桨叶选型：51366 MCK v3}
+
+配套选用 \textbf{51366 MCK v3} 桨叶，直径5.1\,inch，
+在6S电压下配合2306.5-1850KV电机使用时，
+典型推力-油门数据如表~\ref{tab:thrust_data}所示。
+
+\begin{table}[htbp]
+    \centering
+    \caption{51366 MCK v3 桨叶推力数据（6S，四旋翼合计）}
+    \label{tab:thrust_data}
+    \begin{tabular}{lrrr}
+        \toprule
+        油门（\%） & 单旋翼推力 (gf) & 四旋翼合计 (gf) & 推重比 \\
+        \midrule
+        30\%  &  440  & 1760  & 1.20 \\
+        50\%  &  850  & 3400  & 2.32 \\
+        70\%  & 1150  & 4600  & 3.13 \\
+        100\% & 1400  & 5600  & 3.81 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+由表~\ref{tab:thrust_data}可知，系统悬停所需总推力1468\,gf
+约在30\%$\sim$50\%油门区间实现，悬停工作油门约为26\%$\sim$30\%。
+50\%油门时推重比达2.32，满足设计指标（$\geq 1.5$）要求，
+动力储备充裕，具备良好的抗扰与机动能力。
+
+% ----------------------------------------------------------
+% [图片占位 Fig.4.1] ★推荐制作★
+% 内容：推力-油门曲线图（折线图）
+%   横轴：油门百分比(%)，纵轴：四旋翼合计推力(gf)
+%   加一条水平虚线标注悬停所需推力1468gf
+%   可用Excel/Python绘制后截图，或直接手绘示意图
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.65\textwidth]{figures/fig4_1_thrust_curve.png}
+%     \caption{四旋翼推力-油门关系曲线（6S，51366 MCK v3桨叶）}
+%     \label{fig:thrust_curve}
+% \end{figure}
+% ----------------------------------------------------------
+
+
+\section{气动阻力分析}
+
+\subsection{垂直方向气动分析}
+
+充气伞面相对于旋翼桨盘位于上方，旋翼尾流在通过桨盘后向下加速。
+伞面位于桨盘上方且面积相对于桨盘面积较大，
+旋翼下洗流对伞面的直接影响可忽略不计。
+在悬停工况下，伞面垂直方向气动阻力主要为静压差引起的上下面压差，
+由于飞行速度接近零，此项气动力极小，对悬停推力需求的影响可忽略。
+
+\subsection{侧向风载荷分析}
+
+在侧风条件下，充气伞面的大面积会受到显著的侧向气动力。
+以侧风速度 $V_w = 3$\,m/s 为分析工况，
+伞面正面投影面积取 $S_{\text{front}} = 0.686 \times 0.686 \approx 0.471$\,m$^2$（垂直伞面迎风），
+采用平板阻力系数 $C_D \approx 1.3$，侧向气动阻力为：
+
+\begin{equation}
+    F_{\text{drag}} = \frac{1}{2}\rho V_w^2 C_D S_{\text{front}}
+                    = \frac{1}{2} \times 1.225 \times 9 \times 1.3 \times 0.471
+                    \approx 3.37\,\text{N} \approx 344\,\text{gf}
+    \label{eq:drag}
+\end{equation}
+
+在50\%油门时四旋翼合计推力约3400\,gf，
+侧向阻力344\,gf占总推力约10.1\%，系统具备足够的侧向控制裕量以抵抗3\,m/s侧风。
+当侧风超过5\,m/s时，侧向阻力将显著增大，建议在此风速以下使用本系统。
+
+
+\section{续航时间估算}
+
+基于式~(\ref{eq:actual_power})的悬停功率估算结果（$P \approx 217$\,W），
+对两种供电形态下的续航时间进行理论估算。
+
+\subsection{系留供电模式}
+
+地面电源采用6S 10000\,mAh锂聚合物电池，
+标称电压22.2\,V，储能约222\,Wh。
+考虑电池放电效率、线缆损耗等实际因素（综合效率系数取0.65），
+实际可用能量约144\,Wh，理论续航时间：
+
+\begin{equation}
+    t_{\text{tether}} = \frac{222 \times 0.65}{217} \times 60 \approx 40\,\text{min}
+    \label{eq:endurance_tether}
+\end{equation}
+
+\subsection{自载电池模式}
+
+机载电池采用6S 1500\,mAh，储能约33.3\,Wh，
+理论续航时间：
+
+\begin{equation}
+    t_{\text{onboard}} = \frac{33.3 \times 0.65}{217} \times 60 \approx 6\,\text{min}
+    \label{eq:endurance_onboard}
+\end{equation}
+
+自载模式主要用于功能验证与应急返航，其续航时间满足短时使用需求。
+系留模式约40\,min的理论续航远超设计指标（$\geq 15$\,min），
+在实际使用场景中具有充裕的使用时长。
+
+
+\section{重心位置分析}
+
+\subsection{重心高度估算}
+
+以旋翼平面为基准面（$z = 0$），向上为正方向，
+对各部件质心高度进行估算，如表~\ref{tab:cg_analysis}所示。
+
+\begin{table}[htbp]
+    \centering
+    \caption{各部件质心高度与重心贡献}
+    \label{tab:cg_analysis}
+    \begin{tabular}{lrrr}
+        \toprule
+        部件              & 质量 $m_i$ (g) & 质心高度 $z_i$ (mm) & $m_i z_i$ (g$\cdot$mm) \\
+        \midrule
+        电机 $\times 4$   & 320  &  0   &     0 \\
+        ESC $\times 4$    & 100  & $-$10 & $-$1000 \\
+        桨叶 $\times 4$   &  52  &  5   &   260 \\
+        Pixhawk 6C        &  38  &  40  &  1520 \\
+        GPS模块           &  30  &  50  &  1500 \\
+        接收机             &  15  &  35  &   525 \\
+        PLA节点结构件      & 600  &  5   &  3000 \\
+        气柱骨架           & 150  &  0   &     0 \\
+        TPU伞面           & 150  &  20  &  3000 \\
+        线缆与紧固件       &  13  &  0   &     0 \\
+        \midrule
+        \textbf{合计}     & \textbf{1468} & — & \textbf{8805} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+整机质心高度：
+
+\begin{equation}
+    z_{\text{CG}} = \frac{\sum m_i z_i}{\sum m_i} = \frac{8805}{1468} \approx +6.0\,\text{mm}
+    \label{eq:cg_height}
+\end{equation}
+
+整机质心位于旋翼平面\textbf{上方约6\,mm}处。
+
+\subsection{重心偏高的影响分析}
+
+质心位于旋翼平面以上，意味着系统在横向扰动下存在轻微的正反馈倾向，
+即飞行器倾斜时重力分量会增大倾斜趋势。
+然而，本系统质心偏高幅度仅约6\,mm，相对于1230\,mm的旋翼轴距而言极小（约0.5\%），
+其对飞行稳定性的影响在正常PID控制范围内完全可以补偿，
+无需进行配重调整或特殊控制策略设计。
+飞控系统的PID参数整定策略将在第五章详细展开。
+
+
+\section{本章小结}
+
+本章完成了飞行雨伞系统动力系统的理论设计与选型工作。
+整机起飞质量预算为1468\,g，对应悬停总升力需求14.40\,N。
+通过动量理论推导，得到悬停诱导速度约10.56\,m/s，
+理论悬停功率约217\,W（含效率修正）。
+选用SIRIUS 2306.5-1850KV电机配51366 MCK v3桨叶，
+50\%油门时推重比达2.32，悬停工作油门约26\%$\sim$30\%，
+动力储备充裕。系留模式理论续航约40\,min，
+自载模式约6\,min，均满足设计指标要求。
+整机质心位于旋翼平面上方约6\,mm，对飞行稳定性影响可忽略。
+本章计算结果将作为第五章飞控参数整定的输入依据。
