@@ -54,54 +54,65 @@ $[T_1,\,T_2,\,T_3,\,T_4]^T$ 映射为升力与三轴力矩：
     \label{eq:allocation}
 \end{equation}
 
-其中 $L = 0.435$\,m 为旋翼到机体坐标轴的力臂，$k$ 为电机反扭矩系数。
+其中 $L = 0.475$\,m 为旋翼中心到机体质心的对角线力臂（基于 950\,mm 对角线轴距），$k$ 为电机反扭矩系数。
+
 
 \subsection{充气伞形结构对飞行动力学的影响}
 
 本系统相较于标准多旋翼飞行器，在动力学层面存在两项显著差异。
 
 \subsubsection{转动惯量显著偏大}
-
 以旋翼平面几何中心为转动基准，对系统各主要部件的转动惯量进行估算，
 结果如表~\ref{tab:inertia}所示。
 
-\begin{table}[htbp]
-    \centering
+\begin{longtable}{lrrr}
     \caption{各部件转动惯量估算（绕 $x/y$ 轴）}
-    \label{tab:inertia}
-    \begin{tabular}{lrrr}
-        \toprule
-        部件              & 质量 (g) & 等效力臂 (mm) & $I_{xx}$ (kg$\cdot$m$^2$) \\
-        \midrule
-        旋翼单元 $\times 4$  & 492  & 435  & 0.093 \\
-        PLA节点结构件        & 600  & 350  & 0.065 \\
-        气柱骨架             & 150  & 均布  & 0.019 \\
-        TPU伞面             & 150  & 均布  & 0.019 \\
-        中心件（飞控等）      &  76  & $\approx 0$ & $\approx 0$ \\
-        \midrule
-        \textbf{合计}        & —    & —    & \textbf{0.196} \\
-        \bottomrule
-    \end{tabular}
-\end{table}
+    \label{tab:inertia} \\
+    % -------- 第一页表头 --------
+    \toprule
+    部件 & 质量 (g) & 等效力臂 (mm) & $I_{xx}$ (kg$\cdot$m$^2$) \\
+    \midrule
+    \endfirsthead
+    % -------- 续页表头 --------
+    \multicolumn{4}{l}{\small 续表~\ref*{tab:inertia}} \\[2pt]
+    \toprule
+    部件 & 质量 (g) & 等效力臂 (mm) & $I_{xx}$ (kg$\cdot$m$^2$) \\
+    \midrule
+    \endhead
+    % -------- 每页底部（非末页）--------
+    \midrule
+    \multicolumn{4}{r}{\small 接下页} \\
+    \endfoot
+    % -------- 最后一页底部 --------
+    \bottomrule
+    \endlastfoot
+    % -------- 表格内容 --------
+    旋翼单元 $\times 4$  & 492 & 475        & 0.111 \\[3pt]
+    PLA节点结构件        & 600 & 380        & 0.087 \\[3pt]
+    气柱骨架             & 150 & 均布        & 0.006 \\[3pt]
+    TPU伞面             & 150 & 均布        & 0.006 \\[3pt]
+    中心件（飞控等）      &  76 & $\approx 0$ & $\approx 0$ \\
+    \midrule
+    \textbf{合计}        & 1468 & —           & \textbf{0.210} \\
+\end{longtable}
 
-本系统 $I_{xx} = I_{yy} \approx 0.196$\,kg$\cdot$m$^2$，
-$I_{zz} \approx 0.393$\,kg$\cdot$m$^2$。
-相比典型450\,mm轴距四旋翼（$I_{xx} \approx 0.012$\,kg$\cdot$m$^2$），
-本系统转动惯量\textbf{约为标准四旋翼的16倍}，
-主要来源于1230\,mm超大轴距与大面积骨架的质量分布。
 
-转动惯量大意味着：相同控制力矩下角加速度更小，姿态响应较慢；
-但同时在低速悬停时对小扰动的角加速度响应更迟钝，
-飞行器表现出更好的姿态自然稳定性。
-在PID参数整定时，大转动惯量要求\textbf{显著降低比例增益P}，
-否则控制力矩相对于惯量过强，易引发姿态震荡。
+本系统 $I_{xx} = I_{yy} \approx 0.210\,\text{kg}\cdot\text{m}^2$，
+$I_{zz} \approx 0.420\,\text{kg}\cdot\text{m}^2$。
+相比典型 450\,mm 轴距四旋翼（$I_{xx} \approx 0.012\,\text{kg}\cdot\text{m}^2$），
+本系统转动惯量\textbf{约为标准四旋翼的 17 倍}，
+主要来源于约 950\,mm 的对角线大轴距与大面积骨架的质量分布。
+转动惯量偏大，相同控制力矩下角加速度更小，姿态响应变慢；
+但在低速悬停时对小扰动的抵抗能力也随之增强，
+姿态的自然稳定性反而有所改善。
+PID 整定时需\textbf{显著降低比例增益 P}，
+否则控制力矩相对于惯量过强，容易引发姿态震荡。
 
 \subsubsection{重心略高于旋翼平面}
 
-由第四章计算，整机质心位于旋翼平面上方约6\,mm处。
-该偏高幅度相对于1230\,mm旋翼轴距仅约0.5\%，
-对飞行稳定性影响极小，在正常PID控制范围内可完全补偿，
-无需进行配重调整或特殊控制策略设计。
+由第四章计算，整机质心位于旋翼平面上方约 6\,mm 处。
+相对于 1230\,mm 旋翼轴距，这一偏差仅约 0.5\%，
+在正常 PID 控制范围内可自然补偿，无需配重调整。
 
 
 \section{Pixhawk 6C嵌入式飞控系统}
@@ -113,26 +124,64 @@ Pixhawk 6C搭载STM32H753主处理器（480\,MHz）与STM32F100协处理器，
 集成三轴加速度计与陀螺仪（ICM-42688-P）、
 气压计（MS5611）、磁罗盘接口等传感器，
 运行 \textbf{NuttX实时操作系统}与 \textbf{PX4飞控固件}。
+
+多旋翼飞控系统的典型硬件组成与连接关系如图~\ref{fig:mc_hw_connection}所示，
+主要包括飞控主板（Autopilot）、电子调速器（ESC）、无刷电机、
+锂电池、GPS与罗盘模块、遥控接收机（RC Receiver）及数传电台等\cite{quanquan2017}。
+本系统在此基础上进行了针对性选型，具体参数如表~\ref{tab:pixhawk_spec}所示。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.90\textwidth]{figures/fig5_mc_hw_connection.jpg}
+    \caption{多旋翼飞控系统硬件组成与连接关系（图片来源：Quan Quan~\cite{quanquan2017}，原图由Jethro Hazelhurst绘制）}
+    \label{fig:mc_hw_connection}
+\end{figure}
+
+
 主要硬件参数如表~\ref{tab:pixhawk_spec}所示。
 
-\begin{table}[htbp]
-    \centering
+\begin{longtable}{ll}
     \caption{Pixhawk 6C 主要硬件参数}
-    \label{tab:pixhawk_spec}
-    \begin{tabular}{ll}
-        \toprule
-        参数           & 规格 \\
-        \midrule
-        主处理器        & STM32H753（480\,MHz，2\,MB Flash） \\
-        加速度计/陀螺仪 & ICM-42688-P \\
-        气压计          & MS5611 \\
-        工作电压        & 4.75$\sim$5.25\,V \\
-        自重            & 约38\,g \\
-        PWM输出         & 8路 \\
-        通信接口        & UART $\times$6，I$^2$C $\times$2，SPI $\times$3 \\
-        \bottomrule
-    \end{tabular}
-\end{table}
+    \label{tab:pixhawk_spec} \\
+
+    % -------- 第一页表头 --------
+    \toprule
+    参数 & 规格 \\
+    \midrule
+    \endfirsthead
+
+    % -------- 续页表头 --------
+    \multicolumn{2}{l}{\small 续表~\ref*{tab:pixhawk_spec}} \\[2pt]
+    \toprule
+    参数 & 规格 \\
+    \midrule
+    \endhead
+
+    % -------- 每页底部（非末页）--------
+    \midrule
+    \multicolumn{2}{r}{\small 接下页} \\
+    \endfoot
+
+    % -------- 最后一页底部 --------
+    \bottomrule
+    \endlastfoot
+
+    % -------- 表格内容 --------
+    主处理器        & STM32H753（480\,MHz，2\,MB Flash） \\[3pt]
+    加速度计/陀螺仪 & ICM-42688-P \\[3pt]
+    气压计          & MS5611 \\[3pt]
+    工作电压        & 4.75$\sim$5.25\,V \\[3pt]
+    自重            & 约 38\,g \\[3pt]
+    PWM输出         & 8路 \\[3pt]
+    通信接口        & UART $\times$6，I$^2$C $\times$2，SPI $\times$3 \\
+
+\end{longtable}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.25\textwidth]{figures/pixhawk6c_photo.png}
+    \caption{Pixhawk 6C飞控硬件实物图（图片来源：Holybro官网）}
+    \label{fig:pixhawk6c}
+\end{figure}
 
 \subsection{PX4控制回路架构}
 
@@ -148,19 +197,17 @@ PX4固件实现了完整的多旋翼飞行控制回路，采用\textbf{内外环
 
 本系统在验证阶段主要使用\textbf{姿态稳定模式（Stabilize）}
 与\textbf{定高模式（Altitude Hold）}，
-通过乐迪AT9S Pro遥控器进行手动控制，不涉及全自主飞行。
+通过乐迪AT9S Pro遥控器进行手动控制，不涉及全自主飞行。PX4多旋翼的完整级联控制架构如图~\ref{fig:px4_loop}所示。
+
 
 % ----------------------------------------------------------
-% [图片占位 Fig.5.1] ★推荐制作★
-% 内容：PX4双环控制回路框图
-%   外环（位置控制）→ 期望姿态角 → 内环（姿态控制）→ 电机PWM → 飞行器
-%   可参考PX4官方文档的控制架构图，手绘或用draw.io简化绘制
-% \begin{figure}[htbp]
-%     \centering
-%     \includegraphics[width=0.80\textwidth]{figures/fig5_1_px4_control_loop.png}
-%     \caption{PX4双环级联控制回路架构}
-%     \label{fig:px4_loop}
-% \end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.90\textwidth]{figures/px4_mc_control_arch.jpg}
+    \caption{PX4多旋翼级联控制架构（图片来源：PX4 Development Team~\cite{PX4Docs2024}）}
+    \label{fig:px4_loop}
+\end{figure}
+
 % ----------------------------------------------------------
 
 \subsection{传感器配置与校准}
@@ -183,25 +230,24 @@ PX4固件实现了完整的多旋翼飞行控制回路，采用\textbf{内外环
 
 \subsection{整定难点分析}
 
-本系统在PID参数整定方面面临以下有别于标准多旋翼的特殊挑战：
+本系统在 PID 参数整定方面面临以下有别于标准多旋翼的挑战：
 
 \begin{itemize}
     \item \textbf{大转动惯量导致的响应迟滞}：
-          如5.1节分析，本系统转动惯量约为同质量标准四旋翼的16倍。
-          若照搬标准四旋翼PID参数，比例项P过大会导致控制力矩远超实际需求，
-          引发姿态过冲甚至持续震荡；初始整定时须显著降低P增益。
+          如 5.1 节分析，本系统转动惯量约为同质量标准四旋翼的 17 倍。
+          若照搬标准四旋翼的 PID 参数，比例项 P 过大会使控制力矩远超实际需求，
+          引发姿态过冲甚至持续震荡。初始整定时须显著降低 P 增益。
 
     \item \textbf{伞面气动阻尼的影响}：
-          充气伞面的大面积对空气运动产生显著的气动阻尼，
-          使系统在横向扰动下具有较大的自然衰减效果，
-          有利于减少超调，但可能造成姿态响应不灵敏，
-          需适当补偿微分项D。
+          充气伞面面积大，对横向运动产生显著的气动阻尼，
+          在横向扰动下有较好的自然衰减效果，超调量相对较小；
+          但姿态响应灵敏度也因此下降，微分项 D 需适当补偿。
 
     \item \textbf{悬停油门预设}：
-          本系统悬停油门约26\%$\sim$30\%，
-          远低于PX4默认的50\%悬停油门预设，
-          需在飞行前通过参数 \texttt{MPC\_THR\_HOVER} 进行修正，
-          否则飞控在切换定高模式时会产生较大的高度跳变。
+          根据第四章推力测试数据，本系统悬停油门约为 38\%，
+          低于 PX4 默认的 50\%。
+          飞行前需通过参数 \texttt{MPC\_THR\_HOVER} 修正该预设值，
+          否则切换定高模式时会出现高度跳变。
 \end{itemize}
 
 \subsection{初始PID参数设置}
@@ -209,71 +255,97 @@ PX4固件实现了完整的多旋翼飞行控制回路，采用\textbf{内外环
 鉴于本系统大转动惯量特性，初始参数在PX4默认值基础上进行调整，
 如表~\ref{tab:pid_params}所示。
 
-\begin{table}[htbp]
-    \centering
+\begin{longtable}{lrrl}
     \caption{PID参数初始设定值（相对PX4默认值）}
-    \label{tab:pid_params}
-    \begin{tabular}{lrrl}
-        \toprule
-        参数名称             & PX4默认值 & 初始设定值 & 调整依据 \\
-        \midrule
-        \texttt{MC\_ROLLRATE\_P}   & 0.150 & 0.050 & 大转动惯量，P降至默认值1/3 \\
-        \texttt{MC\_ROLLRATE\_I}   & 0.100 & 0.050 & 保留I项消除稳态误差 \\
-        \texttt{MC\_ROLLRATE\_D}   & 0.003 & 0.008 & D适当增大补偿气动阻尼 \\
-        \texttt{MC\_PITCHRATE\_P}  & 0.150 & 0.050 & 同Roll轴 \\
-        \texttt{MC\_PITCHRATE\_I}  & 0.100 & 0.050 & 同Roll轴 \\
-        \texttt{MC\_PITCHRATE\_D}  & 0.003 & 0.008 & 同Roll轴 \\
-        \texttt{MC\_YAWRATE\_P}    & 0.200 & 0.080 & 偏航惯量更大，P进一步降低 \\
-        \texttt{MC\_YAWRATE\_I}    & 0.100 & 0.040 & — \\
-        \texttt{MPC\_THR\_HOVER}   & 0.500 & 0.280 & 悬停油门约26\%$\sim$30\% \\
-        \bottomrule
-    \end{tabular}
-\end{table}
+    \label{tab:pid_params} \\
+
+    % -------- 第一页表头 --------
+    \toprule
+    参数名称 & PX4默认值 & 初始设定值 & 调整依据 \\
+    \midrule
+    \endfirsthead
+
+    % -------- 续页表头 --------
+    \multicolumn{4}{l}{\small 续表~\ref*{tab:pid_params}} \\[2pt]
+    \toprule
+    参数名称 & PX4默认值 & 初始设定值 & 调整依据 \\
+    \midrule
+    \endhead
+
+    % -------- 每页底部（非末页）--------
+    \midrule
+    \multicolumn{4}{r}{\small 接下页} \\
+    \endfoot
+
+    % -------- 最后一页底部 --------
+    \bottomrule
+    \endlastfoot
+
+    % -------- 表格内容 --------
+    \texttt{MC\_ROLLRATE\_P}  & 0.150 & 0.050 & 大转动惯量，P降至默认值1/3 \\[3pt]
+    \texttt{MC\_ROLLRATE\_I}  & 0.100 & 0.050 & 保留I项消除稳态误差 \\[3pt]
+    \texttt{MC\_ROLLRATE\_D}  & 0.003 & 0.008 & D适当增大补偿气动阻尼 \\[3pt]
+    \texttt{MC\_PITCHRATE\_P} & 0.150 & 0.050 & 同Roll轴 \\[3pt]
+    \texttt{MC\_PITCHRATE\_I} & 0.100 & 0.050 & 同Roll轴 \\[3pt]
+    \texttt{MC\_PITCHRATE\_D} & 0.003 & 0.008 & 同Roll轴 \\[3pt]
+    \texttt{MC\_YAWRATE\_P}   & 0.200 & 0.080 & 偏航惯量更大，P进一步降低 \\[3pt]
+    \texttt{MC\_YAWRATE\_I}   & 0.100 & 0.040 & — \\[3pt]
+    \texttt{MPC\_THR\_HOVER}  & 0.500 & 0.380 & 悬停油门约为 38\% \\
+
+\end{longtable}
+
+PX4角速率控制器采用K-PID结构，如图~\ref{fig:px4_rate_ctrl}所示，
+微分支路引入低通滤波器（LPF）以抑制陀螺仪高频噪声，
+这对于本系统大转动惯量下的低增益整定尤为重要。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.80\textwidth]{figures/px4_mc_rate_controller.jpg}
+    \caption{PX4角速率控制器结构（K-PID + LPF）（图片来源：PX4 Development Team~\cite{PX4Docs2024}）}
+    \label{fig:px4_rate_ctrl}
+\end{figure}
+
 
 \subsection{整定流程}
 
-参数整定依照以下步骤进行，全程使用QGC地面站实时监控飞行状态与日志：
+参数整定按以下步骤进行，全程使用 QGC 地面站实时监控飞行状态与日志：
 
 \begin{description}
     \item[第一步：机型配置]
-        在QGC中选择机型为"Generic Quadrotor X"，
-        按PX4标准X型四旋翼顺序连接电机：
-        1号（右前，逆时针）、2号（左后，逆时针）、
-        3号（左前，顺时针）、4号（右后，顺时针）。
+        在 QGC 中选择机型为"Generic Quadrotor X"，
+        按 PX4 标准 X 型四旋翼顺序连接电机：
+        1 号（右前，逆时针）、2 号（左后，逆时针）、
+        3 号（左前，顺时针）、4 号（右后，顺时针）。
 
     \item[第二步：传感器校准]
         依次完成加速度计六点校准、磁罗盘旋转校准、
         遥控器通道校准与油门曲线线性化设置。
 
     \item[第三步：参数预设]
-        按表~\ref{tab:pid_params}输入初始PID参数，
-        同时设置 \texttt{MPC\_THR\_HOVER = 0.28}，
+        按表~\ref{tab:pid_params} 输入初始 PID 参数，
+        同时设置 \texttt{MPC\_THR\_HOVER = 0.380}，
         \texttt{MOT\_SPIN\_MIN = 0.05}（最低电机转速，防止低油门停转）。
 
     \item[第四步：绑绳悬停测试]
-        用四根软绳（约1\,m长）从四个方向固定飞行器，
-        推油门至悬停点，观察飞行器姿态稳定性与震荡情况。
-        若出现明显的Roll/Pitch震荡，继续降低对应轴的P增益；
-        若响应过于迟钝，适当增大D增益。
+        用四根软绳（约 1\,m 长）从四个方向固定飞行器，
+        推油门至悬停点，观察姿态稳定性与震荡情况。
+        出现明显 Roll/Pitch 震荡时，继续降低对应轴的 P 增益；
+        响应过于迟钝时，适当增大 D 增益。
 
     \item[第五步：自由悬停精调]
         解除绑绳，在空旷场地进行自由悬停测试，
-        根据实际姿态响应逐步微调P、I、D参数至稳定悬停状态。
-        调整原则：P决定响应速度，I消除稳态漂移，D抑制过冲。
+        根据实际姿态响应逐步微调 P、I、D 参数。
+        调整时以消除震荡为优先，再处理稳态漂移，
+        最后根据过冲情况调整 D。
 \end{description}
-
 % ----------------------------------------------------------
-% [图片占位 Fig.5.2] ★推荐制作★
-% 内容：QGC地面站参数配置界面截图
-%   截图内容：Parameters页面，显示MC_ROLLRATE_P等参数输入框
-%   或：飞行日志中Roll/Pitch角度曲线，显示调参前后对比
-%   用QGC软件截图即可，无需额外绘制
-% \begin{figure}[htbp]
-%     \centering
-%     \includegraphics[width=0.75\textwidth]{figures/fig5_2_qgc_params.png}
-%     \caption{QGroundControl地面站PID参数配置界面}
-%     \label{fig:qgc_params}
-% \end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.80\textwidth]{figures/fig5_2_qgc_params.png}
+    \caption{QGroundControl地面站PID参数配置界面}
+    \label{fig:qgc_params}
+\end{figure}
+
 % ----------------------------------------------------------
 
 
@@ -314,13 +386,14 @@ AT9S Pro支持失控保护（Failsafe）功能：
 
 \section{本章小结}
 
-本章完成了飞行雨伞系统飞行控制系统的配置与调试方案设计。
-通过建立多旋翼六自由度动力学模型，分析了充气伞形结构对飞行动力学的两项特殊影响：
-转动惯量约为标准四旋翼的16倍（$I_{xx} \approx 0.196$\,kg$\cdot$m$^2$），
-以及质心偏高约6\,mm。
-基于Pixhawk 6C飞控平台与PX4固件，完成了传感器校准、
+本章完成了飞行控制系统的配置与调试工作。
+通过建立多旋翼六自由度动力学模型，分析了充气伞形结构对飞行动力学的两项影响：
+转动惯量约为标准四旋翼的 17 倍（$I_{xx} \approx 0.210\,\text{kg}\cdot\text{m}^2$），
+以及质心偏高约 6\,mm。
+
+基于 Pixhawk~6C 飞控平台与 PX4 固件，完成了传感器校准、
 电机接线配置与飞行模式设置。
-针对大转动惯量特性，制定了系统性的PID参数初始整定策略，
-将Roll/Pitch比例增益降至PX4默认值的1/3，
-并提出了绑绳悬停→自由悬停的渐进式调试流程，
-为飞行验证阶段提供了完整的调试方案。
+针对大转动惯量特性，制定了 PID 参数初始整定策略：
+将 Roll/Pitch 比例增益降至 PX4 默认值的 1/3，
+并采用绑绳悬停→自由悬停的渐进式调试流程。
+上述配置与整定结果将在第七章飞行性能测试中得到验证。

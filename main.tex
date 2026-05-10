@@ -13,16 +13,42 @@
 % 请在cquthesis.sty文件中定义其他会用到的宏包和自己的变量
 % 这样可以防止main.tex太过臃肿。
 \usepackage{cquthesis}
-% \usepackage{ctex}        % 中文支持
-% \usepackage{booktabs}    % 三线表（\toprule \midrule \bottomrule）
-% \usepackage{graphicx}    % 图片插入
-% \usepackage{float}       % 图表位置控制[htbp]
+\usepackage{ctex}        % 中文支持
+\usepackage{graphicx}    % 图片插入
+\usepackage{float}       % 图表位置控制[htbp]
+\usepackage{booktabs}   % 三线表
+\usepackage{array}      % p列支持
+\usepackage{makecell}   % 可选，支持单元格换行
+\usepackage[section]{placeins}
+\usepackage{longtable}
+\usepackage{multirow}
+
+\usepackage{caption}
+\captionsetup{
+    font={small},         % 使用small字体（对应五号）
+    labelsep=quad,        % 编号和标题之间空一个汉字符
+    justification=centering % 标题居中
+}
+\captionsetup[table]{position=top,belowskip=6bp,aboveskip=0bp}
+\captionsetup[figure]{position=bottom,belowskip=0bp,aboveskip=6bp}
+
+% 2. 重新定义表格内的默认字体大小（2024模版要求：小五或small）
+\makeatletter
+\def\cqu@tabular{\small\@tabular}
+\makeatother
+
+% 3. 调整表格行高（如果觉得当前行高过大，可以适当调小）
+\renewcommand{\arraystretch}{1.2} % 1.2到1.5之间视情况调整
 
 % 定义所有的图片文件在 figures 子目录下
 \graphicspath{{figures/}}
 
+
+
+
+
 %*** 写作时，使用这个命令只渲染你想查看的部分，提升工作效率，定稿时注释掉整行
-% \includeonly{contents/ch1_introduction}
+% \includeonly{contents/ch3_inflatable}
 \begin{document}
 
 \input{contents/cover}
@@ -64,14 +90,15 @@
 \backmatter %%% 后置部分(致谢、参考文献、附录等)
 
 
-%% 致谢
-\include{contents/ack}
+
 %% 参考文献
 % 顺序编码制：cqunumerical		
 % 注意：至少需要引用一篇参考文献，否则下面两行会引起编译错误。
 \bibliographystyle{cqunumerical}
 \bibliography{ref/refs}
 
+%% 致谢
+\include{contents/ack}
 
 %% 附录(按ABC...分节，证明、推导、程序、个人简历等)
 \appendix

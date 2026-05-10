@@ -5,7 +5,7 @@
   eauthor = {Wang~Junxi},
   studentid = {20222660},
   csupervisor = {罗远新},
-  esupervisor = {{Luo Yuanxin}},
+  esupervisor = {{Prof. Luo Yuanxin}},
   cassistsupervisor = {},
   cextrasupervisor = {},
   eassistsupervisor = {},
@@ -21,19 +21,29 @@
 % 论文的摘要
 %
 % ===================
-\begin{cabstract}	% 中文摘要
-	% 在此处填写你的中文摘要（300-400字）
-% 模板会自动设置"摘 要"标题为黑体三号居中
-% 正文自动为宋体小四号
-本文设计并实现了一套基于充气结构的车载多形态飞行机器人系统（飞行雨伞）……
+\begin{cabstract}
+随着新能源汽车向着智能化方向发展，车载系统功能的边界也在发生变化，它的服务对象也由原来的车内扩展到了车外的实际使用场景。本文主要针对传统雨伞在出行时需要手持、会占用双手的问题，设计并实现了以充气结构为支撑的车载多形态飞行机器人系统——飞行雨伞。该系统把车辆当作地面部署的基准点，在收纳态和飞行遮蔽态之间实施主动形态调整，其主要目的就是给用户在下车遇雨的时候，赋予一种“随车常备、快速部署、双手解放”的遮雨手段。简单来说，它并不是把雨伞搬到飞行器上，而是试图把遮雨这件事情变成一种可以部署的车载服务能力。
+
+本文采用无刚性承力件的充气模块化骨架结构。系统用标准快递气柱、PLA 3D打印节点构成正方形平面桁架骨架，再加TPU薄膜伞面形成遮蔽区域，得到一个$0.608\,\text{m}^2$的遮蔽面积。这样处理有一个非常直接的好处就是可以提供较大的遮蔽范围，排气之后又能整体压缩收纳，方便放在车载空间里。大面积遮蔽和紧凑收纳两个经常难以兼顾的要求，在本方案中得到了比较好的平衡。
+
+在动力系统方面，针对整机实测起飞质量 $1683\,\text{g}$，本文选用 SIRIUS 2306.5-1850KV 电机与 51366 桨叶，并采用系留供电与机载电池互补的双模式供电方案。前者主要是做长时悬停，后者是应急备用或者紧急情况下独立工作的备用电源。该种设计思路比较务实，一方面考虑了持续供能，另一方面也保留了基本的机动和安全冗余，不至于使系统完全依靠单一的供电方式。
+
+系统用Pixhawk6C开源飞控和PX4固件来搭建。由于充气伞体带来超大转动惯量、气动阻力比常规四旋翼要大得多，因此飞行器的控制特性与常见的四旋翼相比有很大不同。计算结果表明，其转动惯量约为同质量标准四旋翼的 17 倍，其中 $I_{xx}\approx0.210\,\text{kg}\cdot\text{m}^2$。如果直接使用默认的控制参数，系统在调试初期很容易产生较强的振荡。因此本文提出把比例增益设为默认值1/3的PID初始整定方法，使第一轮调参先控制在可控范围内，再进行更详细的优化。这一步看上去只是参数的缩放，但它对于系统顺利起飞、稳定悬停来说却至关重要。
+
+从实验结果可以看出，充气骨架可以保持工作气压大于30min，有基本的使用稳定性；完整的工作流程中起飞准备时间是85s，排气收纳时间是48s，说明系统部署和回收过程比较紧凑。在姿态稳定模式下，飞行器实现了 Roll 轴 $\pm2.1^\circ$、Pitch 轴 $\pm1.8^\circ$ 的稳定悬停；在系留模式下，实测续航达到 18.2\,min。从整体上看各项指标都达到了预期的设计目的，说明系统方案具有较好的可实现性。
+
+本文工作证明了充气结构对飞行器形态主动重构技术的可行性和可靠性，也为车载飞行机器人在个人出行场景下的工程化应用提供了一些经验。因此本研究不单考虑了“能否飞行”的问题，也考虑了“能否收运”、“能否携带”以及“能否真正服务于实际的出行场景”。
 \end{cabstract}
-\ckeywords{车载Agent,飞行雨伞,嵌入式系统,充气结构,多旋翼}
+
+\ckeywords{多旋翼飞行器,充气结构,形态重构,车载服务系统,PID控制}
 
 \begin{eabstract}
-% 在此处填写你的英文摘要
-This paper designs and implements a vehicle-borne multi-morphology flying robot system...
+In the context of the continuous intelligent development of new energy vehicles, the function boundary of the onboard system is being reformed, and its service capability is gradually expanding from the car interior to various other applications. The main topic of this thesis will be the inconvenience of traditional umbrellas; they need to be held with one hand, so it is not convenient to use both hands for other activities during travel, and therefore a vehicle-mounted multi-form aerial robotic system based on an inflatable structure called a "Flying Umbrella" will be put forward. The vehicle is to be used as the ground base of the system, and it can switch between a stowed state and a flying shelter mode. The main reason for this is that it is a rain-shielding device, can be carried in the car, is easy to deploy, and will not obstruct the user's hands. In short, it is not enough to have an umbrella for the flying platform; one should be installed on board the aircraft.
+The shape of an inflatable skeleton structure will not be fixed and will have no supports. A square-plan truss has been made of standard express air columns and PLA 3D-printed joints, and a TPU film canopy will be added to form a shielding surface; it has reached an effective covered area of 0.608 m$^2$. The advantage of the above method is its relatively simple structure; after setting up the shelter, there will be a relatively large enclosed area, and after inflation, the whole structure can be folded for transport in a car. In short, the two Design Goals must be achieved at the same time, but they are often conflicting; that is to say, to increase the coverage area, more storage space is required.
+Given that the measured take-off mass is $1683\,\text{g}$, SIRIUS 2306.5-1850KV motors and 51366 propellers will be chosen for the propulsion system, and a dual-mode power supply consisting of tethered power and an onboard battery will be used. The former is mainly for extended hovering; the latter is to be used in case of emergency and has a short service life. It is a reasonable plan that will extend the time people can exercise and keep them healthy and safe to some extent.
+Pixhawk~6C is used as the open-source flight controller and PX4 is the firmware for flight control. Because of the relatively large moment of inertia and larger aerodynamic drag of the inflatable canopy, it will not be controlled in the same way as a typical quadrotor. The calculated inertia is about 17 times that of a standard quadrotor with the same mass, and $I_{xx} \approx 0.210\,\text{kg}\cdot\text{m}^2$. If the default controller parameters are used directly, there will be serious oscillation in the early stage of tuning. Therefore, the first PID tuning strategy is to reduce the proportional gain by one-third of the default value; thus, the first round of tuning can be in a stable state before further adjustment. The modification is relatively simple, but it will help the aircraft take off and hover stably.
+As shown in the experiment above, the expanded skeleton can maintain the working pressure for more than 30 minutes and have some basic service stability. In the full operating procedure, the takeoff preparation time is 85 s and the deflation-and-stowage time is 48 s; therefore, both deployment and recovery can be carried out in a short amount of time. The attitude-stabilised mode can maintain the stability of the vehicle in flight, and the roll-axis deviation is $\le \pm 2.1^\circ$ and the pitch-axis deviation is $\le \pm 1.8^\circ$. The lifetime of Tethered Mode is 18.2 minutes. All of the main indicators have reached the goals set out in the design; thus, the system will be realised.
+Based on the above research, it has been found that inflatable structures can be used to achieve the active deformation and reorganization of aerial vehicles, and some practical engineering experience has also been obtained for vehicle-mounted flying robots with personal mobility. More importantly, in addition to deciding whether the system can fly, we will also investigate whether it can be stored and transported reasonably in the actual travel environment, etc.
 \end{eabstract}
-\ekeywords{Vehicle-Borne Agent, Flying Umbrella, Embedded System, Inflatable Structure, Multi-rotor}
 
-
-% 封面和摘要配置完成
+\ekeywords{Multi-rotor UAV, Inflatable Structure, Morphing Reconfiguration, In-vehicle Service System, PID Control}
