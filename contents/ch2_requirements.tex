@@ -142,9 +142,10 @@
 这一方案目前在电力巡检、安防监控等需要长时间悬停的场景中
 已有不少实际应用\cite{Chang2021}。
 
-\begin{figure}[htbp]
+% 使用 [H] 避免大图独占一页（浮动页垂直留白）；高度上限便于与同页后续正文衔接
+\begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{figures/fig2_ref_UAV.png}
+    \includegraphics[width=\linewidth,height=0.46\textheight,keepaspectratio]{figures/fig2_ref_UAV.png}
     \caption{系留供电无人机系统架构示意。
     （a）系统电气与通信框架：飞行器端包含备用电池、DC-DC 转换器及航电系统，
     地面站端配备绞盘、导线器、滑环及地面电源；

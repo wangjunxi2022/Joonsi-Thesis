@@ -1,4 +1,4 @@
-\documentclass[type=bachelor, fontset=fandol, seriftoc]{cquthesis}%
+\documentclass[type=bachelor, fontset=fandol, seriftoc, printmode=twoside]{cquthesis}
 
 % 可用选项：
 % type=[bachelor|master|doctor],      % 必选，毕业论文类型，以下项目不填时为默认
@@ -13,7 +13,31 @@
 % 请在cquthesis.sty文件中定义其他会用到的宏包和自己的变量
 % 这样可以防止main.tex太过臃肿。
 \usepackage{cquthesis}
+% 在 oneside 下强制 \cleardoublepage 补到奇数页（须用 \renewcommand，不能用 \newcommand）
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \ifodd\c@page
+  \else
+    \null
+    \ifcqu@blankleft\thispagestyle{style@empty}\fi
+    \newpage
+    \if@twocolumn
+      \null\newpage
+    \fi
+  \fi
+}
+\makeatother
+%%%
 \usepackage{ctex}        % 中文支持
+
+\ctexset{
+  chapter = {
+    fixskip = true,
+    beforeskip = 13bp,
+    afterskip = 24bp,
+  }
+}
 \usepackage{graphicx}    % 图片插入
 \usepackage{float}       % 图表位置控制[htbp]
 \usepackage{booktabs}   % 三线表
@@ -106,6 +130,6 @@
 % 个人简历
 % \include{contents/appendix}
 %% 原创声明和授权说明书，可选：用扫描页替换
-%\cquauthpage[contents/authscan.pdf]
+\cquauthpage[contents/authscan.pdf]
 % \cquauthpage
 \end{document}
