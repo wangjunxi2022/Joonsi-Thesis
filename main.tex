@@ -68,7 +68,21 @@
 \graphicspath{{figures/}}
 
 
+% ===== 目录页按 Word 模版 =====
+% 1) 「目」与「录」之间空两字符
+\renewcommand{\contentsname}{目\hskip2\ccwd 录}
 
+% 2) 标题上下各「空一行」：勿用 1\baselineskip（会被 sty 里 1.667 行距放大，且不等于 Word）
+%    Word 空一行 ≈ 一个五号字高的空白，用固定 bp/ccwd 更稳
+\setlength{\cftbeforetoctitleskip}{0pt}   % 页眉线到「目录」，仍偏大可试 -12pt
+\setlength{\cftaftertoctitleskip}{2\ccwd} % 「目录」到第一条
+
+% 3) 目录条目：黑体五号（章/节/小节统一）
+\renewcommand{\cftchapfont}{\zihao{-5}\heiti}
+\renewcommand{\cftsecfont}{\zihao{-5}\heiti}
+\renewcommand{\cftsubsecfont}{\zihao{-5}\heiti}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftchapdotsep}}  % 保留引导点
+% over-20260521
 
 
 %*** 写作时，使用这个命令只渲染你想查看的部分，提升工作效率，定稿时注释掉整行
